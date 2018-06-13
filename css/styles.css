@@ -22,3 +22,15 @@ img {
 .this-is-dumb {
   display: none;
 }
+
+#player1{
+  text-align: left;
+}
+#player2{
+  text-align: right;
+  display: none;
+}
+
+#Player1-result,#Player2-result,#draw,.btn{
+  display: none;
+}
