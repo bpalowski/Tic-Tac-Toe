@@ -1,220 +1,118 @@
-//Global Variables
-var turn = 0;
-var gameOver = false;
-var spaceArray = [["","",""],["","",""],["","",""]];
-console.log(spaceArray);
-console.log(turn);
+$(document).ready(function(){
+  //Default players turn to X
+  var turn = "X"
+  //Array stores values that we will check later for a winner
+  var turns = ["#","#","#","#","#","#","#","#","#"];
+  // Default computer turn
+  var computersTurn = "O";
+  // keeps track if its the computers turn
+  var gameOn = false;
 
-//Constructors
-function Player(name) {
-  this.name = name;
-};
+  var count = 0;
 
-function Game (gameEnd) {
-  this.gameEnd = gameEnd;
-}
+  //change players turn to X and computers to 0
+  $('#turnX').click(function(){
+    turn = 'O';
+    computersTurn='X';
+    $("#turnX").removeClass("btn-success");
+    $("#turnO").addClass("btn-success");
+    reset();
+  });
 
-function Space (xCoordinate, yCoordinate) {
-  this.xCoordinate = xCoordinate;
-  this.yCoordinate = yCoordinate;
-}
+  $('#turnO').click(function(){
+    turn = 'X';
+    computersTurn='O';
+    $("#turnO").removeClass("btn-success");
+    $("#turnX").addClass("btn-success");
+    reset();
+  });
 
-function Board (arrayBoard) {
-  this.arrayBoard = arrayBoard;
-}
-
-//Functions
-function turnSequence (arrayBoard, xCoordinate, yCoordinate) {
-  if (arrayBoard[xCoordinate][yCoordinate] === "" && !gameOver) {
-    if (turn%2 === 0) {
-      arrayBoard[xCoordinate].splice(yCoordinate, 1, "X");
-      $("#"+ xCoordinate +"-"+ yCoordinate).append("<img src='img/X.png' alt='x'>");
-      turn ++;
-      $("#player2").show();
-      $("#player1").hide();
-      console.log(arrayBoard);
-      console.log(turn);
-    } else {
-      arrayBoard[xCoordinate].splice(yCoordinate, 1, "O");
-      $("#"+ xCoordinate +"-"+ yCoordinate).append("<img src='img/O.png' alt='o'>");
-      turn ++;
-      $("#player2").hide();
-      $("#player1").show();
-      console.log(arrayBoard);
-      console.log(turn);
+  function computerTurn(){
+    var taken = false;
+    while(taken===false && count !== 5){
+      var computersMove = (Math.random()*10).toFixed();
+      var move = $("#" + computersMove).text();
+      if(move==="#"){
+        $("#" + computersMove).text(computersTurn);
+        taken=true;
+        turns[computersMove]= computersTurn;
+      }
     }
   }
-}
-function winCheck (arrayBoard) {
-  //Horizontal
-  if(arrayBoard[0][0] === "X" && arrayBoard[0][1] === "X" && arrayBoard[0][2] === "X"){
-    $("#Player1-result").show();
-    gameOver = true;
+
+  function playerTurn(Turn, id){
+    var spotTaken = $("#"+id).text();
+    if(spotTaken==="#"){
+      count++;
+      turns[id] = turn;
+      $("#" +id).text(turn);
+      winCondition(turns, turn);
+      if(gameOn===false){
+        computerTurn();
+        winCondition(turns, computersTurn);
+      };
+    }
   }
-  if(arrayBoard[1][0] === "X" && arrayBoard[1][1] === "X" && arrayBoard[1][2] === "X"){
-    $("#Player1-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[2][0] === "X" && arrayBoard[2][1] === "X" && arrayBoard[2][2] === "X"){
-    $("#Player1-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[0][0] === "O" && arrayBoard[0][1] === "O" && arrayBoard[0][2] === "O"){
-    $("#Player2-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[1][0] === "O" && arrayBoard[1][1] === "O" && arrayBoard[1][2] === "O"){
-    $("#Player2-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[2][0] === "O" && arrayBoard[2][1] === "O" && arrayBoard[2][2] === "O"){
-    $("#Player2-result").show();
-    gameOver = true;
+  function winCondition( turnArray, currentTurn){
+    if(turnArray[0] === currentTurn && turnArray[1]===currentTurn && turnArray[2] === currentTurn){
+      gameOn = true;
+      reset();
+      alert("player " + currentTurn + "wins(Top row )");
+    }
+    else if (turnArray[2] === currentTurn && turnArray[4]===currentTurn && turnArray[6] === currentTurn){
+      gameOn = true;
+      reset();
+      alert("player " + currentTurn + "wins(Top row )");
+    }
+    else if (turnArray[0] === currentTurn && turnArray[3]===currentTurn && turnArray[6] === currentTurn){
+      gameOn = true;
+      reset();
+      alert("player " + currentTurn + "wins(Top row )");
+    }
+    else if (turnArray[0] === currentTurn && turnArray[4]===currentTurn && turnArray[8] === currentTurn){
+      gameOn = true;
+      reset();
+      alert("player " + currentTurn + "wins(Top row )");
+    }
+    else if (turnArray[1] === currentTurn && turnArray[4]===currentTurn && turnArray[7] === currentTurn){
+      gameOn = true;
+      reset();
+      alert("player " + currentTurn + "wins(Top row )");
+    }
+    else if (turnArray[2] === currentTurn && turnArray[5]===currentTurn && turnArray[8] === currentTurn){
+      gameOn = true;
+      reset();
+      alert("player " + currentTurn + "wins(Top row )");
+    }
+    else if (turnArray[3] === currentTurn && turnArray[4]===currentTurn && turnArray[5] === currentTurn){
+      gameOn = true;
+      reset();
+      alert("player " + currentTurn + "wins(Top row )");
+    }
+    else if (turnArray[6] === currentTurn && turnArray[7]===currentTurn && turnArray[8] === currentTurn){
+      gameOn = true;
+      reset();
+      alert("player " + currentTurn + "wins(Top row )");
+    }
+    else if (turnArray[6] === currentTurn && turnArray[7]===currentTurn && turnArray[8] === currentTurn){
+      gameOn = true;
+      reset();
+      alert("player " + currentTurn + "wins(Top row )");
+    }
+    else{
+      gameOn = false;
+    }
   }
 
-  //Vertical
-  if(arrayBoard[0][0] === "X" && arrayBoard[1][0] === "X" && arrayBoard[2][0] === "X"){
-    $("#Player1-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[0][1] === "X" && arrayBoard[1][1] === "X" && arrayBoard[2][1] === "X"){
-    $("#Player1-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[0][2] === "X" && arrayBoard[1][2] === "X" && arrayBoard[2][2] === "X"){
-    $("#Player1-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[0][0] === "O" && arrayBoard[1][0] === "O" && arrayBoard[2][0] === "O"){
-    $("#Player2-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[0][1] === "O" && arrayBoard[1][1] === "O" && arrayBoard[2][1] === "O"){
-    $("#Player2-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[0][2] === "O" && arrayBoard[1][2] === "O" && arrayBoard[2][2] === "O"){
-    $("#Player2-result").show();
-    gameOver = true;
-  }
-  //Diagonal
-  if(arrayBoard[0][0] === "X" && arrayBoard[1][1] === "X" && arrayBoard[2][2] === "X"){
-    $("#Player1-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[0][2] === "X" && arrayBoard[1][1] === "X" && arrayBoard[2][0] === "X"){
-    $("#Player1-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[0][0] === "O" && arrayBoard[1][1] === "O" && arrayBoard[2][2] === "O"){
-    $("#Player2-result").show();
-    gameOver = true;
-  }
-  if(arrayBoard[0][2] === "O" && arrayBoard[1][1] === "O" && arrayBoard[2][0] === "O"){
-    $("#Player2-result").show();
-    gameOver = true;
-  }
+  $(".tic").click(function(){
+    var slot = $(this).attr('id');
+    playerTurn(turn,slot);
 
-  //Draw
-  if(arrayBoard[0][0] !== "" && arrayBoard[0][1] !== "" && arrayBoard[0][2] !== "" &&  arrayBoard[1][0] !== "" && arrayBoard[1][1] !== "" && arrayBoard[1][2] !== "" && arrayBoard[2][0] !== "" && arrayBoard[2][1] !== "" && arrayBoard[2][2] !== "" && !gameOver){
-    gameOver = true;
-    $("#draw").show();
+  });
+  function reset(){
+    turns=["#","#","#","#","#","#","#","#","#"];
+    count= 0;
+    $(".tic").text("#");
+    gameOn = false;
   }
-  if (gameOver) {
-    $(".btn").show();
-  }
-}
-
-$(document).ready(function(){
-  $(".btn").click(function(){
-    turn = 0;
-    gameOver = false;
-    spaceArray = [["","",""],["","",""],["","",""]];
-    $("#player2").hide();
-    $("#player1").show();
-    $("#Player1-result").hide();
-    $("#Player2-result").hide();
-    $("#draw").hide();
-    $("td").empty();
-    newBoard = new Board (spaceArray);
-  });
-  var newGame = new Game (gameOver);
-  var newBoard = new Board (spaceArray);
-
-  $("#0-0").click(function(){
-    var xIndex = 0;
-    var yIndex = 0;
-    var newSpace = new Space (xIndex, yIndex);
-    turnSequence(newBoard.arrayBoard, newSpace.xCoordinate, newSpace.yCoordinate);
-    winCheck(newBoard.arrayBoard);
-  });
-  $("#0-1").click(function(){
-    var xIndex = 0;
-    var yIndex = 1;
-    var newSpace = new Space (xIndex, yIndex);
-    turnSequence(newBoard.arrayBoard, newSpace.xCoordinate, newSpace.yCoordinate);
-    winCheck(newBoard.arrayBoard);
-  });
-  $("#0-2").click(function(){
-    var xIndex = 0;
-    var yIndex = 2;
-    var newSpace = new Space (xIndex, yIndex);
-    turnSequence(newBoard.arrayBoard, newSpace.xCoordinate, newSpace.yCoordinate);
-    winCheck(newBoard.arrayBoard);
-  });
-  $("#1-0").click(function(){
-    var xIndex = 1;
-    var yIndex = 0;
-    var newSpace = new Space (xIndex, yIndex);
-    turnSequence(newBoard.arrayBoard, newSpace.xCoordinate, newSpace.yCoordinate);
-    winCheck(newBoard.arrayBoard);
-  });
-  $("#1-1").click(function(){
-    var xIndex = 1;
-    var yIndex = 1;
-    var newSpace = new Space (xIndex, yIndex);
-    turnSequence(newBoard.arrayBoard, newSpace.xCoordinate, newSpace.yCoordinate);
-  });
-  $("#1-2").click(function(){
-    var xIndex = 1;
-    var yIndex = 2;
-    var newSpace = new Space (xIndex, yIndex);
-    turnSequence(newBoard.arrayBoard, newSpace.xCoordinate, newSpace.yCoordinate);
-    winCheck(newBoard.arrayBoard);
-  });
-  $("#2-0").click(function(){
-    var xIndex = 2;
-    var yIndex = 0;
-    var newSpace = new Space (xIndex, yIndex);
-    turnSequence(newBoard.arrayBoard, newSpace.xCoordinate, newSpace.yCoordinate);
-    winCheck(newBoard.arrayBoard);
-  });
-  $("#2-1").click(function(){
-    var xIndex = 2;
-    var yIndex = 1;
-    var newSpace = new Space (xIndex, yIndex);
-    turnSequence(newBoard.arrayBoard, newSpace.xCoordinate, newSpace.yCoordinate);
-    winCheck(newBoard.arrayBoard);
-  });
-  $("#2-2").click(function(){
-    var xIndex = 2;
-    var yIndex = 2;
-    var newSpace = new Space (xIndex, yIndex);
-    turnSequence(newBoard.arrayBoard, newSpace.xCoordinate, newSpace.yCoordinate);
-    winCheck(newBoard.arrayBoard);
-  });
-
 });
-
-
-//   var cell0 = $("#00").val();
-//   var cell1 = $("#01").val();
-//   var cell2 = $("#02").val();
-//   var cell3 = $("#10").val();
-//   var cell4 = $("#11").val();
-//   var cell5 = $("#12").val();
-//   var cell6 = $("#20").val();
-//   var cell7 = $("#21").val();
-//   var cell8 = $("#22").val();
-//   var cells = [cell0, cell1, cell2, cell3, cell4, cell5, cell5, cell6, cell7, cell8]
-// });
